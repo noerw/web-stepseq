@@ -1,10 +1,9 @@
 "use strict";
 
+/*
+ * main module, loading all dependencies
+ */
 angular
-
-    /*
-     * main module, loading all dependencies
-     */
     .module('StepSeqApp', ['StepSequencer', 'WebMidi'])
 
     /*
@@ -111,7 +110,7 @@ angular
             transpose: {
                 channel:   6,
                 cmdType:   11,
-                param:     19,
+                CC:        19,
                 lastValue: 63
             }
         };
@@ -230,7 +229,7 @@ angular
 
                         case _getStatusByte(mMap.transpose):
                             var k = event.data[1];
-                            if (k === mMap.transpose.param) {
+                            if (k === mMap.transpose.CC) {
                                 if (event.data[2] > mMap.transpose.lastValue) $scope.transpose('up');
                                 else $scope.transpose('down');
                                 mMap.transpose.lastValue = event.data[2];
@@ -248,7 +247,7 @@ angular
          * @return int status byte for the functionality passed in mapping
          */
         function _getStatusByte(mapping) {
-            return mapping.channel + mapping.cmdType * 16;
+            return mapping.cmdType * 16 + mapping.channel;
         }
 
         // watches to pass changes in the view to the model in Playback / MidiIO

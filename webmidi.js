@@ -1,6 +1,8 @@
-/* provides IO functionality to the browsers WebMIDI API */
 "use strict";
 
+/*
+ * provides Midi-IO functionality via the browsers WebMIDI API
+ */
 angular
     .module('WebMidi', [])
     .factory('MidiIO', ['$window', '$timeout', '$q', function($window, $timeout, $q) {
@@ -124,14 +126,20 @@ angular
             });
         }
 
-        return {
-            getDevices: _getDevices,
+        function _logMidiEvent(event) {
+            var string = "MIDI message received at timestamp " + event.timestamp + "[" + event.data.length + " bytes]: ";
+            for (var i=0; i<event.data.length; i++) {
+                string += "0x" + event.data[i].toString(16) + " ";
+            }
+            console.log(string);
+        }
 
+        return {
+            getDevices:   _getDevices,
             setInDevice:  _setInDevice,
             setOutDevice: _setOutDevice,
             disconnectInDevice:  _disconnectInDevice,
             disconnectOutDevice: _disconnectOutDevice,
-
             sendNote: _sendNote
         };
     }]);
